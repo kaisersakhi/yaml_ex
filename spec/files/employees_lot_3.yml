@@ -1,0 +1,36 @@
+- name: Brian Kim
+  age: 32
+  occupation: Data Analyst
+  salary: 80000
+  address:
+    street: 2829 Maple St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Samantha Brown
+  age: 27
+  occupation: Product Manager
+  salary: 100000
+  address:
+    street: 3031 Cedar St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Eric Lee
+  age: 30
+  occupation: Software Engineer
+  salary: 95000
+  address:
+    street: 3233 Walnut St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Michelle Kim
+  age: 28
+  occupation: Sales Manager
+  salary: 90000
+  address:
+    street: 3435 Pine St
+    city: Anytown
+    state: CA
+    zip: 12345

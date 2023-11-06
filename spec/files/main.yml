@@ -1,0 +1,29 @@
+company:
+  name: Acme Inc.
+  %{details}
+  employees:
+    %[employees_lot_1]
+    - name: Daniel Chen
+      age: 31
+      occupation: Marketing Manager
+      salary: 110000
+      address:
+        street: 3637 Maple St
+        city: Anytown
+        state: CA
+        zip: 12345
+    %[employees_lot_2]
+    - name: Amanda Lee
+      age: 26
+      occupation: Data Scientist
+      salary: 85000
+      address:
+        street: 3839 Cedar St
+        city: Anytown
+        state: CA
+        zip: 12345
+    %[employees_lot_3]
+  footer:
+    %<address>
+    %<contact>
+    about_us: Acme Inc. is a leading manufacturer of widgets and gadgets. We have been in business for over 50 years and pride ourselves on our commitment to quality and customer service.

@@ -1,0 +1,45 @@
+- name: Lisa Brown
+  age: 27
+  occupation: Data Scientist
+  salary: 80000
+  address:
+    street: 1819 Pine St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Kevin Lee
+  age: 33
+  occupation: Product Manager
+  salary: 105000
+  address:
+    street: 2021 Maple St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Rachel Kim
+  age: 26
+  occupation: Software Engineer
+  salary: 90000
+  address:
+    street: 2223 Cedar St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Alex Chen
+  age: 34
+  occupation: Sales Manager
+  salary: 95000
+  address:
+    street: 2425 Walnut St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Jessica Lee
+  age: 29
+  occupation: Marketing Manager
+  salary: 110000
+  address:
+    street: 2627 Pine St
+    city: Anytown
+    state: CA
+    zip: 12345

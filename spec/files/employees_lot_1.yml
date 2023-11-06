@@ -1,0 +1,63 @@
+- name: John Doe
+  age: 30
+  occupation: Software Engineer
+  salary: 100000
+  address:
+    street: 123 Main St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Jane Smith
+  age: 25
+  occupation: Data Analyst
+  salary: 75000
+  address:
+    street: 456 Elm St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Bob Johnson
+  age: 42
+  occupation: Sales Manager
+  salary: 85000
+  address:
+    street: 789 Oak St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Sarah Lee
+  age: 35
+  occupation: Marketing Director
+  salary: 120000
+  address:
+    street: 1011 Pine St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Michael Chen
+  age: 28
+  occupation: Product Manager
+  salary: 110000
+  address:
+    street: 1213 Maple St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: Emily Davis
+  age: 31
+  occupation: Human Resources Manager
+  salary: 90000
+  address:
+    street: 1415 Cedar St
+    city: Anytown
+    state: CA
+    zip: 12345
+- name: David Kim
+  age: 29
+  occupation: Software Engineer
+  salary: 95000
+  address:
+    street: 1617 Walnut St
+    city: Anytown
+    state: CA
+    zip: 12345

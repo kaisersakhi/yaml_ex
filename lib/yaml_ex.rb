@@ -37,6 +37,42 @@ module YamlEx
       Psych.load(process)
     end
 
+    def load_with_objects(content: nil, partials:, partial_method:, partial_key_method:)
+      if content.nil? && @main.nil?
+        return false
+      end
+
+      @main = content
+      partials.each do |partial_object|
+        self.add_partial(partial: partial_object.send(partial_method), key: partial_object.send(partial_key_method))
+      end
+      true
+    end
+
+    def load_with_files(main_file_name: nil, partials_path:)
+      if !main_file_name.nil?
+        @main = File.read(main_file_name)
+      elsif @main.nil? # Supposes, main content has been supplied with the constructor.
+        return false
+      end
+
+      partial_files = Dir.entries(partials_path).reject { |file|
+        file == "." || file == ".." || !(File.basename(file.downcase).include?("yml") || File.basename(file.downcase).include?("yaml")) || File.basename(file) == File.basename(main_file_name)
+      }
+      partial_files.each do |file_name|
+        base_name = File.basename(file_name)
+        key = if base_name.include?("yml")
+                base_name.sub(".yml", "")
+              else
+                base_name.sub(".yaml", "")
+              end
+        file_contents = File.read(File.join(partials_path, file_name))
+        next if file_contents.empty?
+        self.add_partial(partial: file_contents, key: key)
+      end
+      true
+    end
+
     private
 
     def process
@@ -59,7 +95,7 @@ module YamlEx
     def check_for_errors(key, all_partials, type, line_no)
       return unless key && all_partials[key][:type] != type
 
-        # TODO: elaborate error here
+      # TODO: elaborate error here
       raise YamlExParserError,
             ("Error in main:doc at line no: #{line_no}\n" << "Type specified in the main:doc doesn't match with the type of corresponding partial." << "\n" << line)
 
@@ -67,7 +103,7 @@ module YamlEx
 
     def key_scount_type(line)
       case line
-      when /\s*-\s*%\[(.*?)\]/
+      when /\s*%\[(.*?)\]/
         [::Regexp.last_match(1), line.match(/^\s*/)[0].length, TYPE_SEQUENCE]
       when /\s*%{(.*?)}\s*\n/
         [::Regexp.last_match(1), line.match(/^\s*/)[0].length, TYPE_MAPPING]
