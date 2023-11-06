@@ -6,15 +6,15 @@ Gem::Specification.new do |spec|
   spec.name = "yaml_ex"
   spec.version = YamlEx::VERSION
   spec.authors = ["Kaiser Sakhi"]
-  spec.email = ["kaisersakhi@gmail.com"]
+  spec.email = ["mail@kaisersakhi.com"]
 
-  spec.summary = "Simple templating capabilities for YAML"
-  spec.description = ""
+  spec.summary = "YAML templating engine."
+  spec.description = "Extend YAML capabilities for templating, good for data scraping."
   spec.homepage = "https://github.com/kaisersakhi/yaml_ex"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
 
-  spec.metadata["allowed_push_host"] = "TODO: Set to your gem server 'https://example.com'"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/kaisersakhi/yaml_ex"

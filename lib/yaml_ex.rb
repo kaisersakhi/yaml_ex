@@ -12,8 +12,8 @@ module YamlEx
     TYPE_SEQUENCE = :sequence
     TYPE_SCALAR = :scalar
 
-    def initialize(content)
-      self.main = content
+    def initialize(content = nil)
+      self.main = content unless content.nil?
       @partials = []
     end
 
