@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.email = ["kaisersakhi@gmail.com"]
 
   spec.summary = "Simple templating capabilities for YAML"
-  spec.description = "TODO: Write a longer description or delete this line."
+  spec.description = ""
   spec.homepage = "https://github.com/kaisersakhi/yaml_ex"
   spec.license = "MIT"
   spec.required_ruby_version = ">= 2.6.0"
@@ -18,7 +18,6 @@ Gem::Specification.new do |spec|
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/kaisersakhi/yaml_ex"
-  # spec.metadata["changelog_uri"] = "TODO: Put your gem's CHANGELOG.md URL here."
 
   # Specify which files should be added to the gem when it is released.
   # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
@@ -32,7 +31,7 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   # Uncomment to register a new dependency of your gem
-  spec.add_dependency "yaml", "~> 1.0"
+  spec.add_dependency "psych", ">= 3.3.2"
 
   # For more information and examples about making a new gem, check out our
   # guide at: https://bundler.io/guides/creating_gem.html

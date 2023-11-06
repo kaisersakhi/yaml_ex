@@ -1,0 +1,29 @@
+module YamlEx
+  class Parser
+    TYPE_MAPPING: Symbol
+
+    TYPE_SCALAR: Symbol
+    TYPE_SEQUENCE: Symbol
+
+    @main: Hash[untyped, untyped]
+    @partials: Array[Hash[untyped, untyped]]
+
+    def add_partial: -> Array[Hash[untyped, untyped]]
+
+    def parse: -> Hash[untyped, untyped]?
+
+    def whole_yaml: -> String?
+
+    private
+
+    def check_for_errors: -> untyped
+
+    def process: -> String?
+
+    def process_partial: -> String?
+
+    def key_scount_type: -> Array[untyped]
+
+    def partial_type: -> Symbol
+  end
+end
