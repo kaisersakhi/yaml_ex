@@ -5,10 +5,14 @@ module YamlEx
     TYPE_SCALAR: Symbol
     TYPE_SEQUENCE: Symbol
 
-    @main: Hash[untyped, untyped]
+    @main: String?
     @partials: Array[Hash[untyped, untyped]]
 
     def add_partial: -> Array[Hash[untyped, untyped]]
+
+    def load_with_files: -> bool
+
+    def load_with_objects: -> bool
 
     def parse: -> Hash[untyped, untyped]?
 
@@ -17,6 +21,8 @@ module YamlEx
     private
 
     def check_for_errors: -> untyped
+
+    def format_and_validate: -> String
 
     def process: -> String?
 

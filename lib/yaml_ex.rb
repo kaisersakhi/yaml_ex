@@ -6,16 +6,18 @@ module YamlEx
 
   end
 
+  # Parses templated yaml with partials.
   class Parser
     TYPE_MAPPING = :map
     TYPE_SEQUENCE = :sequence
     TYPE_SCALAR = :scalar
 
     def initialize(content)
-      @main = content
+      self.main = content
       @partials = []
     end
 
+    # Adds partial
     def add_partial(partial:, key:)
       type = partial_type(partial)
 
@@ -24,35 +26,37 @@ module YamlEx
       end
 
       @partials << { key => {
-        text: partial,
+        text: format_and_validate(partial),
         type: type
       } }
     end
 
+    # Return full/processed text/yaml
     def whole_yaml
       process
     end
 
+    # Returns the processed/full yaml as a Hash
     def parse
       Psych.load(process)
     end
 
+    # Loads partial text and keys, from partial objects.
     def load_with_objects(content: nil, partials:, partial_method:, partial_key_method:)
-      if content.nil? && @main.nil?
-        return false
-      end
+      return false if content.nil? && main.nil? || partials.nil? || partials.empty?
 
-      @main = content
+      self.main = content
       partials.each do |partial_object|
-        self.add_partial(partial: partial_object.send(partial_method), key: partial_object.send(partial_key_method))
+        add_partial(partial: partial_object.send(partial_method), key: partial_object.send(partial_key_method))
       end
       true
     end
 
+    # Loads the files in specified dir, and adds them as partials.
     def load_with_files(main_file_name: nil, partials_path:)
       if !main_file_name.nil?
-        @main = File.read(main_file_name)
-      elsif @main.nil? # Supposes, main content has been supplied with the constructor.
+        self.main = File.read(main_file_name)
+      elsif main.nil? # Supposes, main content has been supplied with the constructor.
         return false
       end
 
@@ -68,19 +72,25 @@ module YamlEx
               end
         file_contents = File.read(File.join(partials_path, file_name))
         next if file_contents.empty?
-        self.add_partial(partial: file_contents, key: key)
+
+        add_partial(partial: file_contents, key: key)
       end
       true
     end
 
     private
 
+    # Does the main job, goes through the main_content/custom_yaml and replaces templates with partials
     def process
-      return main if partials.empty?
+      if partials.empty?
+        raise YamlExParserError, "Couldn't evaluate custom yaml without partials."
+      elsif main.nil?
+        raise YamlExParserError, "Custom YAML must exist before parsing."
+      end
 
       whole_doc = ""
       all_partials = partials.reduce({}, :merge)
-      main.each_line&.with_index do |line, line_no|
+      main&.each_line&.with_index do |line, line_no|
         key, scount, type = key_scount_type(line)
         check_for_errors(key, all_partials, type, line_no)
         whole_doc << if key
@@ -92,15 +102,19 @@ module YamlEx
       whole_doc
     end
 
+    # Checks if partial type matches the template specified types.
     def check_for_errors(key, all_partials, type, line_no)
-      return unless key && all_partials[key][:type] != type
+      if !key.nil? && all_partials[key].nil?
+        raise YamlExParserError, "Partial doesn't exist with key as '#{key}'"
+      end
 
-      # TODO: elaborate error here
+      return unless !key.nil? && all_partials[key][:type] != type
+
       raise YamlExParserError,
             ("Error in main:doc at line no: #{line_no}\n" << "Type specified in the main:doc doesn't match with the type of corresponding partial." << "\n" << line)
-
     end
 
+    # Determines partial key, spaces count in-front of a template, type and return as an array [key, space_count, type]
     def key_scount_type(line)
       case line
       when /\s*%\[(.*?)\]/
@@ -114,6 +128,7 @@ module YamlEx
       end
     end
 
+    # Determines the partial type.
     def partial_type(partial)
       case partial
       when /^\n*\s*-\s*\w+/
@@ -127,12 +142,84 @@ module YamlEx
       end
     end
 
+    # Inserts spaces in-front of the partial.
     def process_partial(partial, scount)
       processed_partial = ""
       partial&.each_line do |line|
         processed_partial << ((" " * scount) << line)
       end
       processed_partial
+    end
+
+    # Parses the partial, and also removes front spaces.
+    def format_and_validate(partial)
+      parsed_partial = Psych.load(partial)
+      Psych.dump(parsed_partial).sub("---\n", "")
+    rescue YamlExParserError => e
+      e.message
+    end
+
+    def main=(content)
+      is_main_yaml_correct(content)
+      @main = content
+    rescue Psych::SyntaxError => e
+      @main = nil
+      raise YamlExParserError,
+            "Could not parse the custom yaml, please check the placement of templates and proper space indentation.\nFollowing are the error that might help: " << e.message
+    end
+
+    # Substitutes random data for partials, and parses the custom yaml.
+    def is_main_yaml_correct(content)
+      mapping_test = <<~MAPPING_TEST
+        ______$$$testing_map$$$______:
+          ______$$$test$$$______: "Test"
+      MAPPING_TEST
+
+      sequence_test = <<~SEQUENCE_TEST
+        - ______$$$test_seq$$$______: "Array"
+      SEQUENCE_TEST
+
+      scalar_test = <<~SCALAR_TEST
+        ______$$$scalar_test_1$$$______: "Scalar 1"
+        ______$$$scalar_test_2$$$______: "Scalar 2"
+      SCALAR_TEST
+
+      test_partials = {
+        "mapping_test" => {
+          type: TYPE_MAPPING,
+          text: mapping_test
+        },
+        "sequence_test" => {
+          type: TYPE_SEQUENCE,
+          text: sequence_test
+        },
+        "scalar_test" => {
+          type: TYPE_SCALAR,
+          text: scalar_test
+        }
+      }
+
+      test_yaml = ""
+      content.each_line.with_index do |line, line_no|
+        _, scount, type = key_scount_type(line)
+        key = case type
+              when TYPE_SCALAR
+                "scalar_test"
+              when TYPE_SEQUENCE
+                "sequence_test"
+              when TYPE_MAPPING
+                "mapping_test"
+              else
+                nil
+              end
+
+        test_yaml << if key
+                       (process_partial(test_partials[key][:text], scount) || "")
+                     else
+                       line
+                     end
+      end
+      Psych.load(test_yaml)
     end
 
     attr_reader :main, :partials
