@@ -45,7 +45,7 @@ module YamlEx
     def load_with_objects(content: nil, partials:, partial_method:, partial_key_method:)
       return false if content.nil? && main.nil? || partials.nil? || partials.empty?
 
-      self.main = content
+      self.main = content unless content.nil?
       partials.each do |partial_object|
         add_partial(partial: partial_object.send(partial_method), key: partial_object.send(partial_key_method))
       end
@@ -82,9 +82,7 @@ module YamlEx
 
     # Does the main job, goes through the main_content/custom_yaml and replaces templates with partials
     def process
-      if partials.empty?
-        raise YamlExParserError, "Couldn't evaluate custom yaml without partials."
-      elsif main.nil?
+      if main.nil?
         raise YamlExParserError, "Custom YAML must exist before parsing."
       end
 
